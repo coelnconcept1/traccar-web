@@ -126,7 +126,12 @@ const UserPage = () => {
     item.email &&
     (item.id || item.password) &&
     (admin || !totpForce || item.totpKey);
-
+  
+  const validUserMap = mapStyles.find(
+    (s) => s.id === item.map && s.available
+  )
+    ? item.map
+    : 'custom';
   return (
     <EditItemView
       endpoint="users"
@@ -203,7 +208,7 @@ const UserPage = () => {
                 <InputLabel>{t('mapDefault')}</InputLabel>
                 <Select
                   label={t('mapDefault')}
-                  value={item.map || 'locationIqStreets'}
+                  value={validUserMap}
                   onChange={(e) => setItem({ ...item, map: e.target.value })}
                 >
                   {mapStyles

@@ -66,7 +66,11 @@ const ServerPage = () => {
     dispatch(sessionActions.updateServer(await response.json()));
     navigate(-1);
   });
-
+  const validServerMap = mapStyles.find(
+    (s) => s.id === item.map && s.available
+  )
+    ? item.map
+    : 'custom';
   return (
     <PageLayout menu={<SettingsMenu />} breadcrumbs={['settingsTitle', 'settingsServer']}>
       <Container maxWidth="xs" className={classes.container}>
@@ -91,7 +95,7 @@ const ServerPage = () => {
                   <InputLabel>{t('mapDefault')}</InputLabel>
                   <Select
                     label={t('mapDefault')}
-                    value={item.map || 'locationIqStreets'}
+                    value={validServerMap}
                     onChange={(e) => setItem({ ...item, map: e.target.value })}
                   >
                     {mapStyles

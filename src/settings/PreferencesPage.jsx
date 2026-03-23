@@ -108,6 +108,14 @@ const PreferencesPage = () => {
     throw Error(response.statusText);
   });
 
+  const activeStyles = attributes.activeMapStyles
+    ? attributes.activeMapStyles
+        .split(',')
+        .map(s => s.trim())
+        .filter(s => s && mapStyles.some(ms => ms.id === s && ms.available))
+    : ['custom'];
+  const finalActiveStyles = activeStyles.length ? activeStyles : ['custom'];
+ 
   return (
     <PageLayout menu={<SettingsMenu />} breadcrumbs={['settingsTitle', 'sharedPreferences']}>
       <Container maxWidth="xs" className={classes.container}>
@@ -122,13 +130,7 @@ const PreferencesPage = () => {
                   <InputLabel>{t('mapActive')}</InputLabel>
                   <Select
                     label={t('mapActive')}
-                    value={
-                      attributes.activeMapStyles?.split(',') || [
-                        'locationIqStreets',
-                        'locationIqDark',
-                        'openFreeMap',
-                      ]
-                    }
+                    value={finalActiveStyles}
                     onChange={(e, child) => {
                       const clicked = mapStyles.find((s) => s.id === child.props.value);
                       if (clicked.available) {
@@ -140,7 +142,7 @@ const PreferencesPage = () => {
                     }}
                     multiple
                   >
-                    {mapStyles.map((style) => (
+                    {mapStyles.filter(style => style.id === 'custom').map((style) => (
                       <MenuItem key={style.id} value={style.id}>
                         <Typography
                           component="span"
